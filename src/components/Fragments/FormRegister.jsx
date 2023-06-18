@@ -1,6 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react'
-import InputForm from '../Elements/InputForm'
-import Button from '../Elements/Button'
+import InputForm from '../Atoms/InputForm'
+import Button from '../Atoms/Button'
 
 const FormRegister = () => {
   return (

@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { Children } from "react";
 
 const Label = (props) => {
 
+    // eslint-disable-next-line react/prop-types
     const {htmlFor, children} = props
 
   return (

@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import Label from "./Label";
 import Input from "./Input";
 
 const InputForm = (props) => {
 
+// eslint-disable-next-line react/prop-types
 const { label, name, type, placeholder} = props
 
   return (

@@ -1,6 +1,6 @@
-import React from 'react'
-import Button from '../Elements/Button'
-import InputForm from '../Elements/InputForm'
+
+import Button from '../Atoms/Button'
+import InputForm from '../Atoms/InputForm'
 
 
 const FormLogin = () => {

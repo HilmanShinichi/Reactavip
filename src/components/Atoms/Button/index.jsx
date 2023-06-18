@@ -1,4 +1,5 @@
 export const Button = (props) => {
+    // eslint-disable-next-line react/prop-types
     const {children, classname = "bg-black"} = props;
     return (
       <button
