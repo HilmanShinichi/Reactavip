@@ -1,5 +1,5 @@
 import AuthLayouts from '../components/Layouts/AuthLayouts'
-import FormRegister from '../components/Fragments/FormRegister'
+import FormRegister from '../components/Molecules/FormRegister'
 
 
 const RegisterPage = () => {

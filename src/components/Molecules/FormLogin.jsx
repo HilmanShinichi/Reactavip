@@ -4,8 +4,15 @@ import InputForm from '../Atoms/InputForm'
 
 
 const FormLogin = () => {
+const handleLogin = (e) => {
+  e.preventDefault();
+  localStorage.setItem('email', e.target.email.value);
+  localStorage.setItem('password', e.target.password.value);
+  window.location.href = '/product';
+}
+
   return (
-    <form action="">
+    <form onSubmit={handleLogin}>
           <InputForm
             label="Email"
             htmlFor="email"
@@ -18,7 +25,7 @@ const FormLogin = () => {
             placeholder="*********"
             name="password"
           />     
-          <Button classname="bg-blue-600 w-full">Login</Button>
+          <Button classname="bg-blue-600 w-full" type="submit">Login</Button>
         </form>
   )
 }
