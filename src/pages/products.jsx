@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Button from "../components/Atoms/Button";
 import CardProduct from "../components/Molecules/CardProduct";
 import CounterClass from "../components/Molecules/Counter.jsx";
@@ -71,6 +71,24 @@ const ProductPage = () => {
     }
   };
 
+  // useRef
+//  const CartsRef = useRef(JSON.parse(localStorage.getItem("Carts") || []));
+
+  // const handleAddToCartRef = (id) => {
+  //     CartsRef.current = [...CartsRef.current, {id, qty: 1}];
+  //     localStorage.setItem("Carts", JSON.stringify(CartsRef.current))
+  // }
+
+  const totalPriceRef = useRef(null);
+
+  useEffect(() => {
+    if(Carts.length > 0){
+      totalPriceRef.current.style.diplay = "table-rows";
+    } else {
+      totalPriceRef.current.style.diplay = "none";
+    }
+  }, [Carts])
+
   return (
     <>
       <div className="flex justify-end h-20 bg-blue-600 text-white items-center px-10">
@@ -131,7 +149,7 @@ const ProductPage = () => {
                   </tr>
                 );
               })}
-              <tr>
+              <tr ref={totalPriceRef}>
                 <td colSpan={3}>
                   <b>Total price </b>
                 </td>
