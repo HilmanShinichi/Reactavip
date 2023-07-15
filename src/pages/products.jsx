@@ -3,7 +3,7 @@ import Button from "../components/Atoms/Button";
 import CardProduct from "../components/Molecules/CardProduct";
 import CounterClass from "../components/Molecules/Counter.jsx";
 import { getProducts } from "../services/product.service";
-import { getUsername } from "../services/auth.service";
+import { useLogin } from "../hooks/useLogin";
 
 // const products = [
 //   {
@@ -35,37 +35,33 @@ import { getUsername } from "../services/auth.service";
 const ProductPage = () => {
   const [Carts, setCarts] = useState([]);
   const [TotalPrice, setTotalPrice] = useState(0);
-  const [Product, setProduct] = useState([]);
-  const [username, setUsername] = useState("");
+  const [Products, setProducts] = useState([]);
+  const username = useLogin()
 
   //didmount
+  
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) { 
-      setUsername(getUsername(token));
-    } else{
-      window.location.href = "/login";
-    }
     setCarts(JSON.parse(localStorage.getItem("Carts") || []));
-  }, []);
+  },[])
 
   useEffect(() => {
     getProducts((data) => {
-      setProduct(data);
+      setProducts(data);
     });
   }, []);
 
   //didupdate
   useEffect(() => {
-    if (Product.length > 0 && Carts.length > 0) {
+    if (Products.length > 0 && Carts.length > 0) {
       const sum = Carts.reduce((acc, cart) => {
-        const product = Product.find((product) => product.id === cart.id);
+        const product = Products.find((product) => product.id === cart.id);
         return acc + product.price * cart.qty;
       }, 0);
       setTotalPrice(sum);
       localStorage.setItem("Carts", JSON.stringify(Carts));
     }
-  }, [Carts, Product]);
+  }, [Carts, Products]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -113,10 +109,10 @@ const ProductPage = () => {
       </div>
       <div className="flex justify-center py-5 ">
         <div className="w-4/6 flex flex-wrap gap-3">
-          {Product.length > 0 &&
-            Product.map((product) => (
+          {Products.length > 0 &&
+            Products.map((product) => (
               <CardProduct key={product.id}>
-                <CardProduct.header image={product.image}></CardProduct.header>
+                <CardProduct.header image={product.image} id={product.id}></CardProduct.header>
                 <CardProduct.body name={product.title}>
                   {product.description}
                 </CardProduct.body>
@@ -141,9 +137,9 @@ const ProductPage = () => {
               </tr>
             </thead>
             <tbody>
-              {Product.length > 0 &&
+              {Products.length > 0 &&
                 Carts.map((cart) => {
-                  const product = Product.find(
+                  const product = Products.find(
                     (product) => product.id === cart.id
                   );
                   return (

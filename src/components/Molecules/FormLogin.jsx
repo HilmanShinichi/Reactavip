@@ -25,7 +25,7 @@ const FormLogin = () => {
        setLoginFailed("");
     
        setTimeout(() => {
-        window.location.href = "/product";
+        window.location.href = "/products";
       }, 2000);
       
       }else{
