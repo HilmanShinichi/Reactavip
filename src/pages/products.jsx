@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef } from "react";
-import Button from "../components/Atoms/Button";
+import { useEffect, useState, useContext } from "react";
 import CardProduct from "../components/Molecules/CardProduct";
 import CounterClass from "../components/Molecules/Counter.jsx";
 import { getProducts } from "../services/product.service";
-import { useLogin } from "../hooks/useLogin";
+import TableCart from "../components/Molecules/TableCart";
+import Navbar from "../components/Layouts/Navbar";
+import { DarkMode } from "../context/DarkMode";
 
 // const products = [
 //   {
@@ -33,53 +34,36 @@ import { useLogin } from "../hooks/useLogin";
 // ];
 
 const ProductPage = () => {
-  const [Carts, setCarts] = useState([]);
-  const [TotalPrice, setTotalPrice] = useState(0);
+  // const [Carts, setCarts] = useState([]);
+  //const [TotalPrice, setTotalPrice] = useState(0);
   const [Products, setProducts] = useState([]);
-  const username = useLogin()
+
 
   //didmount
-  
+
+  // useEffect(() => {
+  //   setCarts(JSON.parse(localStorage.getItem("Carts") || []));
+  // },[])
 
   useEffect(() => {
-    setCarts(JSON.parse(localStorage.getItem("Carts") || []));
-  },[])
-
-  useEffect(() => {
-    getProducts((data) => {
+    getProducts((data) => { 
       setProducts(data);
     });
   }, []);
 
   //didupdate
-  useEffect(() => {
-    if (Products.length > 0 && Carts.length > 0) {
-      const sum = Carts.reduce((acc, cart) => {
-        const product = Products.find((product) => product.id === cart.id);
-        return acc + product.price * cart.qty;
-      }, 0);
-      setTotalPrice(sum);
-      localStorage.setItem("Carts", JSON.stringify(Carts));
-    }
-  }, [Carts, Products]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-
-    window.location.href = "/login";
-  };
-
-  const handleAddToCart = (productId) => {
-    if (Carts.find((cart) => cart.id === productId)) {
-      setCarts(
-        Carts.map((cart) =>
-          cart.id === productId ? { ...cart, qty: cart.qty + 1 } : cart
-        )
-      );
-    } else {
-      setCarts([...Carts, { id: productId, qty: 1 }]);
-    }
-  };
+  // const handleAddToCart = (productId) => {
+  //   if (Carts.find((cart) => cart.id === productId)) {
+  //     setCarts(
+  //       Carts.map((cart) =>
+  //         cart.id === productId ? { ...cart, qty: cart.qty + 1 } : cart
+  //       )
+  //     );
+  //   } else {
+  //     setCarts([...Carts, { id: productId, qty: 1 }]);
+  //   }
+  // };
 
   // useRef
   //  const CartsRef = useRef(JSON.parse(localStorage.getItem("Carts") || []));
@@ -89,94 +73,34 @@ const ProductPage = () => {
   //     localStorage.setItem("Carts", JSON.stringify(CartsRef.current))
   // }
 
-  const totalPriceRef = useRef(null);
-
-  useEffect(() => {
-    if (Carts.length > 0) {
-      totalPriceRef.current.style.diplay = "table-rows";
-    } else {
-      totalPriceRef.current.style.diplay = "none";
-    }
-  }, [Carts]);
-
+  // const totalPriceRef = useRef(null);
+  const { isDarkMode } = useContext(DarkMode)
   return (
     <>
-      <div className="flex justify-end h-20 bg-blue-600 text-white items-center px-10">
-        {username}
-        <Button classname="bg-black ml-5" onClick={handleLogout}>
-          Logout
-        </Button>
-      </div>
-      <div className="flex justify-center py-5 ">
+      <Navbar />
+      <div 
+      className={`flex justify-center py-5 px-4 ${isDarkMode && "bg-gray-900"}`}>
         <div className="w-4/6 flex flex-wrap gap-3">
           {Products.length > 0 &&
             Products.map((product) => (
               <CardProduct key={product.id}>
-                <CardProduct.header image={product.image} id={product.id}></CardProduct.header>
+                <CardProduct.header
+                  image={product.image}
+                  id={product.id}
+                ></CardProduct.header>
                 <CardProduct.body name={product.title}>
                   {product.description}
                 </CardProduct.body>
                 <CardProduct.footer
                   price={product.price}
-                  productId={product.id}
-                  handleAddToCart={handleAddToCart}
+                  id={product.id}
                 ></CardProduct.footer>
               </CardProduct>
             ))}
-        </div>
-        <div className="w-2/6">
-          <h1 className="text-3xl text-blue-600 font-bold ml-5 mb-2">Cart</h1>
-
-          <table className="text-left table-auto border-separate border-spacing-x-5 ">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Products.length > 0 &&
-                Carts.map((cart) => {
-                  const product = Products.find(
-                    (product) => product.id === cart.id
-                  );
-                  return (
-                    <tr key={cart.id}>
-                      <td>{product.title}</td>
-                      <td>
-                        {product.price.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                        })}
-                      </td>
-                      <td>{cart.qty}</td>
-                      <td>
-                        {(cart.qty * product.price).toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                        })}
-                      </td>
-                    </tr>
-                  );
-                })}
-              <tr ref={totalPriceRef}>
-                <td colSpan={3}>
-                  <b>Total price </b>
-                </td>
-                <td>
-                  <b>
-                    {TotalPrice.toLocaleString("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                    })}
-                  </b>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        </div><div className="w-2/6">
+            <h1 className="text-3xl text-blue-600 font-bold ml-5 mb-2">Cart</h1>
+            <TableCart Products={Products} />
+          </div>
       </div>
       <div className="mt-5 flex justify-center">
         <CounterClass />

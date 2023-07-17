@@ -1,6 +1,7 @@
-import { Link, } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "../Atoms/Button";
-
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slices/cartSlice";
 const CardProduct = (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
@@ -13,7 +14,6 @@ const CardProduct = (props) => {
 };
 
 const header = (props) => {
-
   const { image, id } = props;
 
   return (
@@ -43,8 +43,8 @@ const body = (props) => {
 };
 
 const footer = (props) => {
-  const { price, handleAddToCart, productId } = props;
-
+  const { price, id } = props;
+  const dispatch = useDispatch();
   return (
     <div className="flex items-center justify-between px-5 pb-5">
       <span className="text-xl font-bold text-white ">
@@ -52,7 +52,7 @@ const footer = (props) => {
       </span>
       <Button
         classname="bg-blue-600"
-        onClick={() => handleAddToCart(productId)}
+        onClick={() => dispatch(addToCart({ id, qty:1}))}
       >
         {" "}
         Add to Cart
